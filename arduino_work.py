@@ -1,55 +1,35 @@
-from pyfirmata import Arduino, SERVO, util, INPUT
+import serial
 from time import sleep
 
-port = 'COM4'
-pinServo = 10
-board = Arduino(port)
-
-it = util.Iterator(board)
-it.start()
-
-def open_barrier(pin, angle):
-    board.digital[pin].mode = SERVO
-
-
-    board.digital[pin].write(angle)
-    if (angle==0):
-        sleep(5)
-    sleep(0.001)
-
+arduinoData = serial.Serial('COM4', 19200)
 
 def set_barrier():
-    board.digital[2].write(1)
-    for i in range(0, 90):
-        open_barrier(pinServo, i)
-    board.digital[2].write(0)
+    arduinoData.write("GON\r".encode())
+    sleep(1)
+    arduinoData.write("OPEN\r".encode())
+    arduinoData.write("GOF\r".encode())
+    pass
     
 
 def check_barrier_button():
-    prev_state = 0
-    button = board.digital[5]
-    button.mode = INPUT
-
-    while True:
-        board.digital[3].write(1)
-        state = button.read()
-
-        if state != prev_state:
-            if state == 1:
-                board.digital[3].write(0)
+    data = ""
+    while True: 
+        arduinoData.write("RON\r".encode())
+        while(arduinoData.inWaiting() > 0):
+            data = arduinoData.readline()
+            data = str(data, 'utf-8')
+            if(data.startswith("B")):
+                arduinoData.write("ROF\r".encode())
                 set_barrier()
                 break
+        if(data.startswith("B")):
+            break    
 
 
 def check_image_button():
-    prev_state = 0
-    button = board.digital[6]
-    button.mode = INPUT
-
     while True:
-        
-        state = button.read()
-
-        if state != prev_state:
-            if state == 1:
+        while(arduinoData.inWaiting() > 0):
+            data = arduinoData.readline()
+            data = str(data, 'utf-8')
+            if(data.startswith("I")):
                 return True

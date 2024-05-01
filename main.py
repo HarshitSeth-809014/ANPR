@@ -6,12 +6,12 @@ import arduino_work
 while True:
     print("in loop")
     if arduino_work.check_image_button() is True:
-        print("phtoo")
+        print("photo")
         file, datetim = Image.take_photo()
         if file:
             # filepath = './Images/'+file
             # print(filepath)
-            filepath = './image2.jpg'
+            filepath = './image1.jpg'
             result = Extraction.get_num(filepath)
             plate = result[0][1]
             print(plate)
