@@ -4,14 +4,14 @@ import db
 import arduino_work
 
 while True:
-    print("in loop")
+    print("Started....")
     if arduino_work.check_image_button() is True:
-        print("photo")
+        print("Taking Photo...")
         file, datetim = Image.take_photo()
         if file:
-            # filepath = './Images/'+file
-            # print(filepath)
-            filepath = './image1.jpg'
+            filepath = './Images/'+file
+            print(filepath)
+            # filepath = './image2.jpg'
             result = Extraction.get_num(filepath)
             plate = result[0][1]
             print(plate)
@@ -20,5 +20,6 @@ while True:
             if db.check_resident(plate) is True:
                 arduino_work.set_barrier()
             else:
-                print("no open")
+                print("Not the resident")
+                print("Press button to open...")
                 arduino_work.check_barrier_button()

@@ -16,12 +16,12 @@ String cmd;
 void servoOpen() {
   for (pos = 0; pos <= 90; pos += 1) {
     myservo.write(pos);
-    delay(15);
+    delay(30);
   }
   delay(6000);
   for (pos = 90; pos >= 0; pos -= 1) {
     myservo.write(pos);
-    delay(15);
+    delay(30);
   }
 }
 void setup() {

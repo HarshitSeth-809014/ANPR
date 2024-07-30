@@ -1,12 +1,14 @@
 import serial
 from time import sleep
 
+print("Connecting to Arduino....")
 arduinoData = serial.Serial('COM4', 19200)
 
 def set_barrier():
     arduinoData.write("GON\r".encode())
     sleep(1)
     arduinoData.write("OPEN\r".encode())
+
     arduinoData.write("GOF\r".encode())
     pass
     
